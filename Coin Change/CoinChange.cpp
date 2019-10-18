@@ -1,27 +1,21 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define INF 2e8
-
-int coinChange(int coins[], int size, int value) {
-    if(value == 0) return 0;
-    if(value < 0) return INF;
-
-    int dp[value + 1]; 
+int coinChange(vector<int>& coins, int amount) {
+    vector<int> dp(amount+1, INT_MAX-1); 
     dp[0] = 0;
-    for(int i = 1; i <= value; i++) {
-        dp[i] = INF;
-        for(int j = 0; j < size; j++) 
-            dp[i] = min(dp[i], coinChange(coins, size, i - coins[j]));
-        dp[i]++;
-    }
-    return dp[value];
+    for(int i = 1; i <= amount; i++) 
+        for(int j = 0; j < coins.size(); j++) 
+            if(i >= coins[j]) dp[i] = min(dp[i], 1 + dp[ i- coins[j] ]);
+    for(int x : dp) cout << x << endl;
+    return (dp[amount] == INT_MAX-1 ? -1 : dp[amount]);
 }
 
 int main() {
-    int coins[] = {1, 3, 4, 5};
-    int value = 7;
+    int arr[] = {1, 3, 4, 5};
+    vector<int> coins(arr, arr+4);
+    int value = 10;
             
-    cout << "coinChange: " << coinChange(coins, 4, value) <<  endl;
+    cout << "coinChange: " << coinChange(coins, value) <<  endl;
     return 0;
 }
